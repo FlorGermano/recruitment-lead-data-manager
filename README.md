@@ -6,21 +6,23 @@ At Memorable, we work predicting the cognitive impact of images and videos to op
 
 ### The Task
 
-**Extraction**
-You will receive 20 batches of scored assets (400 assets per batch) belonging to the following `industries`:
+In this task we will simulate 20 iterations of an ETL job that seeks to compute a client-facing metric based on our models' output to include it in our dashboard. For the task, you are expected to build a pipeline that receives the sequence of batches as an input, reading them in order, and at each iteration computes a `percentile` according to the task description.
 
-- Clothing
-- Food
-- Cars
-- Hair care
+**Extraction**
+You will receive 20 batches of scored assets (400 assets per batch) that simulate 20 extraction jobs from our deployed inference pipeline.
 
 Each item in the batch will include the following data:
 
 - `id` : a ULID identifying the scored asset
 - `score` : represents the output of a machine learning model for one of our metrics
-- `industry` : represents the industry to which that asset belongs
+- `industry` : represents the industry to which that asset belongs, can be one of 
+    - Clothing
+    - Food
+    - Cars
+    - Hair care
 
-Data is being extracted without any preprocessing step, so you can assume you are working with the raw version of the data.
+
+Data is being extracted without any preprocessing step, so you can assume you are working with the raw version of the data. This includes potentially misspelled categories and micomputed scores.
 
 **Transformation**
 The model score is not an interpretable metric for our clients, as the number is not capped and there are hints of potential drifts in the model's output, given that new trends in advertising cause assets to score higher as time passes by. For this reason, we want to implement a process that converts the scores to percentiles, which are capped between 0 and 100 and help the client clearly compare 2 different scores and judge them good or bad.
@@ -31,10 +33,17 @@ Moreover, we have also identified certain design trends in the uploaded assets t
 
 **Loading**
 The output of the transformation should be loaded in a singel SQL table with the following schema:
-- `id` column to store the asset IDs, which uniquely identify each asset processed.
-- `score` column to store the model's output for that asset
-- `industry` column to store the asset's industry
-- `percentile` the updated version of the scores percentile following the indications in the previous section.
+- `id` : column to store the asset IDs, which uniquely identify each asset processed.
+- `score` : column to store the model's output for that asset
+- `industry` : column to store the asset's industry
+- `percentile` : the updated version of the scores percentile following the indications in the previous section.
+
+To increase traceability on the evolution of the scores' drift, a second table should be maintained to keep track of how the percentile evolves for each asset (identified with the `id`). The schema for this second table looks like:
+- `id`: column to store the asset IDs, which uniquely identify each asset processed.
+- `score`: column to store the model's output for that asset
+- `industry`: column to store the asset's industry
+- `percentile`: the updated version of the scores percentile following the indications in the previous section.
+- `update_iteration`: the iteration number at which this value is updated. For example: first percentile update will happen
 
 
 ### Delivery
