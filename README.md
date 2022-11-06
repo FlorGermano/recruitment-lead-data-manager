@@ -43,7 +43,11 @@ To increase traceability on the evolution of the scores' drift, a second table s
 - `score`: column to store the model's output for that asset
 - `industry`: column to store the asset's industry
 - `percentile`: the updated version of the scores percentile following the indications in the previous section.
-- `update_iteration`: the iteration number at which this value is updated. For example: first percentile update will happen
+- `update_iteration`: the iteration number at which this value is updated.
+
+
+#### Example
+The value at `updated_iteration` helps to tag the iteration at which the `percentile` score was updated. For example, when *batch_4* is loaded, the percentiles will be computed using the industry scores from *batches batch_2, batch_3 and batch_4* and the iteration value will be 4 (iteration 0 happens at initialization with *batch_0*).
 
 
 ### Delivery
