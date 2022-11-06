@@ -9,7 +9,7 @@ At Memorable, we work predicting the cognitive impact of images and videos to op
 In this task we will simulate 20 iterations of an ETL job that seeks to compute a client-facing metric based on our models' output to include it in our dashboard. For the task, you are expected to build a pipeline that receives the sequence of batches as an input, reading them in order, and at each iteration computes a `percentile` according to the task description.
 
 **Extraction**
-You will receive 20 batches of scored assets (400 assets per batch) that simulate 20 extraction jobs from our deployed inference pipeline.
+Under the `batches/` directory you will find 20 batches of scored assets (400 assets per batch) that simulate 20 extraction jobs from our deployed inference pipeline.
 
 Each item in the batch will include the following data:
 
@@ -62,6 +62,3 @@ We take a holistic approach to evaluation and these are the main components:
 - `Effectiveness` : whether the delivered development effectively tackles the proposed task and the output matches expected results.
 - `Efficiency` : whether the delivered development addresses recommended practices for software development. Use of standard technologies is also recommended. 
 - `Documentation`: Clear documentation and commented code account for a significant part of the evaluation. It will also allow us to understand your thought process better and consider it as part of our evaluation criteria.
-
-### Resources
-- By querying [this endpoint](GETrequestlink) you will receive 20 batches of data that simulate the extraction process. 
