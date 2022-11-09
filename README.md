@@ -62,7 +62,7 @@ In a realistic setting, we have an inference pipeline (which can be modelled as 
     1. Distribution drifts in the data
     2. The growth of the `Scores` table
 
-***Feel free to include any diagrams you find useful to answer these questions.***
+*Feel free to include any diagrams you find useful to answer these questions.*
 
 # Delivery
 
@@ -79,6 +79,8 @@ and notify by email to your recruitment contact. As part of the deliverable, you
 - a Python implementation of the `Extraction` , `Transformation` and `Loading` stages
 - Tables requested in the task, stored in a convenient file format (*parquet* file , *csv* , *DB file* or other)
 - Conceptual assessment answers in a format you find most suitable (Google Docs, Slides presentation, Markdown or other)
+
+In case you have any questions, email [juan.hevia@memorable.io](juan.hevia@memorable.io).
 
 # Evaluation criteria
 
