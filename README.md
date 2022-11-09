@@ -68,7 +68,7 @@ In a realistic setting, we have an inference pipeline (which can be modelled as 
 
 Please fork this repository to prevent overwriting the task’s description.
 
-Once the task is completed, please ensure to add the following users as collaborators:
+Once the task is completed, please push to a Github repository and make sure to add the following users as collaborators:
 
 - [JHevia23](https://github.com/JHevia23)
 - [ppfreitas](https://github.com/ppfreitas)
