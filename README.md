@@ -6,33 +6,35 @@ At Memorable, we work predicting the cognitive impact of images and videos to op
 
 ### The Task
 
-In this task we will simulate 20 iterations of an ETL job that seeks to compute a client-facing metric based on our models' output to include it in our dashboard. For the task, you are expected to build a pipeline that receives the sequence of batches as an input, reading them in order, and at each iteration computes a `percentile` according to the task description.
+In this task we will simulate 20 iterations of an ETL job that seeks to compute a client-facing metric based on our models' output. We will give you a sequence of 20 batches with asset ids and their scores. You are tasked with building a pipeline that receives the sequence of batches as an input, reads them in order, and at each iteration transforms scores into `percentiles` according to the distribution of scores seen up until that point.
 
 **Extraction**
+
 Under the `batches/` directory you will find 20 batches of scored assets (400 assets per batch) that simulate 20 extraction jobs from our deployed inference pipeline.
 
 Each item in the batch will include the following data:
 
 - `id` : a ULID identifying the scored asset
-- `score` : represents the output of a machine learning model for one of our metrics
-- `industry` : represents the industry to which that asset belongs, can be one of 
+- `score` : represents the score assigned to each asset by our machine learning models
+- `industry` : represents the industry to which that asset belongs. Can be one of 
     - Clothing
     - Food
     - Cars
     - Hair care
 
 
-Data is being extracted without any preprocessing step, so you can assume you are working with the raw version of the data. This includes potentially misspelled categories and micomputed scores.
+The batches are being extracted without any preprocessing step, so you can assume that you are working with the raw version of the data. This includes potentially misspelled categories and erroneous scores.
 
 **Transformation**
-The model score is not an interpretable metric for our clients, as the number is not capped and there are hints of potential drifts in the model's output, given that new trends in advertising cause assets to score higher as time passes by. For this reason, we want to implement a process that converts the scores to percentiles, which are capped between 0 and 100 and help the client clearly compare 2 different scores and judge them good or bad.
 
-From previous ad hoc analyses, our team has identified that the four industries follow Normal distributions with different parameters, so percentile computation should take this into account and **percentiles should be computed based on the asset's corresponding industry distribution**.
+The raw model score is usually hard to interpret without context: different industries can have different raw score ranges, and advertising trends can affect those ranges. To make our scores more interpretable, we want to convert our scores to percentiles, giving the user an immediate view over how a given score compares to a reference distribution.
+
+From previous ad hoc analyses, our team has identified that the typical scores from the four industries above follow normal distributions with different parameters. This means that transforming a given score into a percentile **must be done using the distribution of the asset's industry**, and not with the distribution of all assets available.
 
 Moreover, we have also identified certain design trends in the uploaded assets that bias the model scores and cause an incremental drift in its output, biasing later scored assets to be higher than previous ones. To account for this shift and allow comparisons between old and new assets, **percentiles should be updated for all the received scores at any time and computed using as an input only the data belonging to the latest 3 batches of scored assets**.
 
 **Loading**
-The output of the transformation should be loaded in a singel SQL table with the following schema:
+The output of the transformation should be loaded in a single SQL table with the following schema:
 - `id` : column to store the asset IDs, which uniquely identify each asset processed.
 - `score` : column to store the model's output for that asset
 - `industry` : column to store the asset's industry
