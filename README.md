@@ -6,7 +6,7 @@ At Memorable, we work predicting the cognitive impact of images and videos to op
 
 We will simulate 20 iterations of an ETL job that seeks to compute a client-facing metric based on our models' output. We will give you a sequence of 20 batches with asset ids and their scores. You are tasked with building a pipeline that receives the sequence of batches as an input, reads them in order, and at each iteration transforms scores into `percentiles` according to the distribution of scores seen up until that point.
 
-**Extraction**
+### Extraction
 Under the `batches/` directory you will find 20 batches of scored assets (400 assets per batch) in JSON format that simulate 20 extraction jobs from our deployed inference pipeline.
 
 Each item in the batch will include the following data:
@@ -23,7 +23,7 @@ Data is being extracted without any preprocessing step, so you can assume you ar
 
 The batches are being extracted without any preprocessing step, so you can assume that you are working with the raw version of the data.
 
-**Transformation**
+### Transformation
 
 The raw score of an asset is usually hard to interpret without context: different industries can have different raw score ranges, and advertising trends can affect those ranges. To make our scores more interpretable, we want to convert them to percentiles, giving the user an immediate view over how a given score compares to a reference distribution.
 
@@ -32,9 +32,9 @@ From previous analyses, our team has identified that the typical scores from the
 Moreover, we have also identified certain design trends in the uploaded assets that bias the model scores and cause an incremental drift in its output, resulting in assets scored later having higher scores than older assets. To account for this, all scores should be converted to percentiles based on distributions that include only the data belonging to the last 3 batches of scored assets.
 
 
->💡 ## Percentile computation
+>## Percentile computation
 >
-> A `percentile` is computed based on the set of `scores` that belong to the same `industry` and the last 3 batches, including the current batch.
+>A `percentile` is computed based on the set of `scores` in the last 3 batches (including current batch) that belong to the same `industry`.
 
 
 Note that this computation will happen every time a new batch is loaded. To address cold start issues, begin the percentile computation when you have enough batches to build an initial distribution (3 batches).
